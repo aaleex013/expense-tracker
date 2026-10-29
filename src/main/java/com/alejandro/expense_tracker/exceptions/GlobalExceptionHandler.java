@@ -36,6 +36,15 @@ public class GlobalExceptionHandler {
                 exception.getMessage()
         );
     }
+    @ExceptionHandler(UserNotFoundException.class)
+    public ProblemDetail handleUserNotFound(
+            UserNotFoundException exception
+    ){
+        return ProblemDetail.forStatusAndDetail(
+                HttpStatus.NOT_FOUND,
+                exception.getMessage()
+        );
+    }
     //-----Todas las excepciones-----
 
     @ExceptionHandler(MethodArgumentNotValidException.class)

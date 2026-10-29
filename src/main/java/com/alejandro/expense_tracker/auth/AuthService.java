@@ -22,6 +22,7 @@ public class AuthService {
     private final JwtService jwtService;
     private final String dummyPasswordHash;
 
+    //Constructor
     public AuthService(
             UserRepository userRepository,
             PasswordEncoder passwordEncoder,
