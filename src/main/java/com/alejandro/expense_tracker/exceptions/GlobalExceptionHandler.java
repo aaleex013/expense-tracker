@@ -18,6 +18,16 @@ import java.util.Map;
 public class GlobalExceptionHandler {
     //-----Todas las excepciones-----
 
+    @ExceptionHandler(CategoryAlreadyExistsException.class)
+    public ProblemDetail handleCategoryAlreadyExists(
+            CategoryAlreadyExistsException exception
+    ) {
+        return ProblemDetail.forStatusAndDetail(
+                HttpStatus.CONFLICT,
+                exception.getMessage()
+        );
+    }
+
     @ExceptionHandler(EmailAlreadyExistsException.class)
     public ProblemDetail handleEmailAlreadyExists(
             EmailAlreadyExistsException exception
