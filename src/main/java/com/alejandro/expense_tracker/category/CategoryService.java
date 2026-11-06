@@ -50,6 +50,25 @@ public class CategoryService {
                 .toList();
     }
 
+    @Transactional
+    public void createDefaultCategories(User user) {
+        List<Category> categories = List.of(
+                new Category("Alimentación", CategoryType.EXPENSE, user),
+                new Category("Ocio", CategoryType.EXPENSE, user),
+                new Category("Gasolina", CategoryType.EXPENSE, user),
+                new Category("Seguro", CategoryType.EXPENSE, user),
+                new Category("Moto", CategoryType.EXPENSE, user),
+                new Category("Internet", CategoryType.EXPENSE, user),
+                new Category("Salud", CategoryType.EXPENSE, user),
+                new Category("Suscripciones", CategoryType.EXPENSE, user),
+                new Category("Compras", CategoryType.EXPENSE, user),
+                new Category("Regalos", CategoryType.EXPENSE, user),
+                new Category("Nómina", CategoryType.INCOME, user)
+        );
+
+        categoryRepository.saveAll(categories);
+    }
+
     private CategoryResponse toResponse(Category category) {
         return new CategoryResponse(
                 category.getId(),

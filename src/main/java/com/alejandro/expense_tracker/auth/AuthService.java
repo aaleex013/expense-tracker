@@ -2,6 +2,7 @@ package com.alejandro.expense_tracker.auth;
 
 import com.alejandro.expense_tracker.auth.dto.RegisterRequest;
 import com.alejandro.expense_tracker.auth.dto.RegisterResponse;
+import com.alejandro.expense_tracker.category.CategoryService;
 import com.alejandro.expense_tracker.exceptions.EmailAlreadyExistsException;
 import com.alejandro.expense_tracker.auth.dto.LoginRequest;
 import com.alejandro.expense_tracker.auth.dto.LoginResponse;
@@ -21,12 +22,14 @@ public class AuthService {
     private final PasswordEncoder passwordEncoder;
     private final JwtService jwtService;
     private final String dummyPasswordHash;
+    private final CategoryService categoryService;
 
     //Constructor
     public AuthService(
             UserRepository userRepository,
             PasswordEncoder passwordEncoder,
-            JwtService jwtService
+            JwtService jwtService,
+            CategoryService categoryService
     ) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
@@ -35,6 +38,7 @@ public class AuthService {
         this.dummyPasswordHash = passwordEncoder.encode(
                 java.util.UUID.randomUUID().toString()
         );
+        this.categoryService = categoryService;
     }
 
     @Transactional
@@ -56,6 +60,7 @@ public class AuthService {
         );
 
         User savedUser = userRepository.save(user);
+        categoryService.createDefaultCategories(savedUser);
 
         return new RegisterResponse(
                 savedUser.getId(),
@@ -63,6 +68,7 @@ public class AuthService {
                 savedUser.getEmail()
         );
     }
+
     @Transactional(readOnly = true)
     public LoginResponse login(LoginRequest request) {
         String email = request.email()
