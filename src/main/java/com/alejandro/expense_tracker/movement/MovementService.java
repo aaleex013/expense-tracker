@@ -5,6 +5,7 @@ import com.alejandro.expense_tracker.category.CategoryRepository;
 
 import com.alejandro.expense_tracker.exceptions.CategoryNotFoundException;
 import com.alejandro.expense_tracker.exceptions.InvalidMovementTypeException;
+import com.alejandro.expense_tracker.exceptions.MovementNotFoundException;
 import com.alejandro.expense_tracker.movement.dto.MovementRequest;
 import com.alejandro.expense_tracker.movement.dto.MovementResponse;
 import org.springframework.data.domain.Page;
@@ -56,6 +57,52 @@ public class MovementService {
         return movementRepository
                 .findAllByUser_IdOrderByMovementDateDescIdDesc(userId, pageable)
                 .map(this::toResponse);
+    }
+
+    @Transactional(readOnly = true)
+    public MovementResponse findById(Long userid, Long movementId) {
+        Movement movement = movementRepository
+                .findByIdAndUser_Id(movementId, userid)
+                .orElseThrow(MovementNotFoundException::new);
+
+        return toResponse(movement);
+    }
+
+    @Transactional
+    public MovementResponse update(Long userId, Long movementId, MovementRequest request) {
+        Movement movement = movementRepository
+                .findByIdAndUser_Id(movementId, userId)
+                .orElseThrow(MovementNotFoundException::new);
+
+        Category category = categoryRepository
+                .findByIdAndUser_Id(request.categoryId(), userId)
+                .orElseThrow(CategoryNotFoundException::new);
+
+        if (!category.getType().name().equals(request.type().name())) {
+            throw new InvalidMovementTypeException();
+        }
+
+        String descripcion = request.descripcion() == null
+                ? null
+                : request.descripcion().strip();
+
+        movement.updateDetails(
+                category,
+                request.type(),
+                request.amount(),
+                request.movementDate(),
+                descripcion
+        );
+
+        return toResponse(movement);
+    }
+    @Transactional
+    public void delete(Long userId, Long movementId) {
+        Movement movement = movementRepository
+                .findByIdAndUser_Id(movementId, userId)
+                .orElseThrow(MovementNotFoundException::new);
+
+        movementRepository.delete(movement);
     }
 
     private MovementResponse toResponse(Movement movement) {

@@ -20,12 +20,10 @@ public class MovementController {
     public MovementController(MovementService movementService) {
         this.movementService = movementService;
     }
+
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public MovementResponse createMovement(
-            @AuthenticationPrincipal Jwt jwt,
-            @Valid @RequestBody MovementRequest request
-    ) {
+    public MovementResponse createMovement(@AuthenticationPrincipal Jwt jwt, @Valid @RequestBody MovementRequest request) {
         Long userId = getUserId(jwt);
 
         return movementService.createMovement(userId, request);
@@ -59,6 +57,29 @@ public class MovementController {
                 result.getTotalPages(),
                 result.isLast()
         );
+    }
+
+    @GetMapping("/{id}")
+    public MovementResponse findById(@AuthenticationPrincipal Jwt jwt, @PathVariable("id") Long movementId) {
+        Long userId = getUserId(jwt);
+
+        return movementService.findById(userId, movementId);
+    }
+    @PutMapping("/{id}")
+    public MovementResponse update(@AuthenticationPrincipal Jwt jwt, @PathVariable("id") Long movementId,
+            @Valid @RequestBody MovementRequest request
+    ) {
+        Long userId = getUserId(jwt);
+
+        return movementService.update(userId, movementId, request);
+    }
+
+    @DeleteMapping("/{id}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void delete(@AuthenticationPrincipal Jwt jwt, @PathVariable("id") Long movementId) {
+        Long userId = getUserId(jwt);
+
+        movementService.delete(userId, movementId);
     }
 
     private Long getUserId(Jwt jwt) {

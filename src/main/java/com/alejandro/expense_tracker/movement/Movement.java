@@ -86,4 +86,17 @@ public class Movement {
     public Instant getCreatedAt() {
         return createdAt;
     }
+    public void updateDetails(
+            Category category,
+            MovementType type,
+            BigDecimal amount,
+            LocalDate movementDate,
+            String descripcion
+    ) {
+        this.category = category;
+        this.type = type;
+        this.amount = amount;
+        this.movementDate = movementDate;
+        this.descripcion = descripcion;
+    }
 }
