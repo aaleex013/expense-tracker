@@ -55,6 +55,25 @@ public class GlobalExceptionHandler {
                 exception.getMessage()
         );
     }
+    @ExceptionHandler(CategoryNotFoundException.class)
+    public ProblemDetail handleCategoryNotFound(
+            CategoryNotFoundException exception
+    ) {
+        return ProblemDetail.forStatusAndDetail(
+                HttpStatus.NOT_FOUND,
+                exception.getMessage()
+        );
+    }
+
+    @ExceptionHandler(InvalidMovementTypeException.class)
+    public ProblemDetail handleInvalidMovementType(
+            InvalidMovementTypeException exception
+    ) {
+        return ProblemDetail.forStatusAndDetail(
+                HttpStatus.BAD_REQUEST,
+                exception.getMessage()
+        );
+    }
     //-----Todas las excepciones-----
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
