@@ -83,6 +83,17 @@ public class GlobalExceptionHandler {
                 exception.getMessage()
         );
     }
+
+    @ExceptionHandler(InvalidDateRangeException.class)
+    public ProblemDetail handleInvalidDateRange(
+            InvalidDateRangeException exception
+    ) {
+        return ProblemDetail.forStatusAndDetail(
+                HttpStatus.BAD_REQUEST,
+                exception.getMessage()
+        );
+    }
+
     //-----Todas las excepciones-----
 
     @ExceptionHandler(MethodArgumentNotValidException.class)

@@ -6,11 +6,15 @@ import com.alejandro.expense_tracker.movement.dto.MovementResponse;
 import jakarta.validation.Valid;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
+
+import java.time.LocalDate;
 
 @RestController
 @RequestMapping("api/movements")
@@ -32,6 +36,16 @@ public class MovementController {
     @GetMapping
     public MovementPageResponse findAll(
             @AuthenticationPrincipal Jwt jwt,
+            @RequestParam(required = false)
+            MovementType type,
+            @RequestParam(required = false)
+            Long categoryId,
+            @RequestParam(required = false)
+            @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
+            LocalDate fromDate,
+            @RequestParam(required = false)
+            @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
+            LocalDate toDate,
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "20") int size
     ) {
@@ -41,12 +55,32 @@ public class MovementController {
                     "La página debe ser mayor o igual a 0 y el tamaño entre 1 y 100"
             );
         }
+        if (categoryId != null && categoryId <= 0) {
+            throw new ResponseStatusException(
+                    HttpStatus.BAD_REQUEST,
+                    "El identificador de la categoría debe ser positivo"
+            );
+        }
 
         Long userId = getUserId(jwt);
 
+        PageRequest pageable = PageRequest.of(
+                page,
+                size,
+                Sort.by(
+                        Sort.Direction.DESC,
+                        "movementDate",
+                        "id"
+                )
+        );
+
         Page<MovementResponse> result = movementService.findAll(
                 userId,
-                PageRequest.of(page, size)
+                type,
+                categoryId,
+                fromDate,
+                toDate,
+                pageable
         );
 
         return new MovementPageResponse(
