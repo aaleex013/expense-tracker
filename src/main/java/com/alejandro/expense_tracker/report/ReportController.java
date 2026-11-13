@@ -1,7 +1,9 @@
 package com.alejandro.expense_tracker.report;
 
 import com.alejandro.expense_tracker.report.dto.MonthlyReportResponse;
+import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -14,6 +16,10 @@ import java.time.YearMonth;
 @RestController
 @RequestMapping("/api/reports")
 @SecurityRequirement(name = "bearerAuth")
+@Tag(
+        name = "Informes",
+        description = "Informes mensuales de ingresos, gastos, balance y desglose por categoría"
+)
 public class ReportController {
 
     private final ReportService reportService;
@@ -24,6 +30,10 @@ public class ReportController {
 
     // Devuelve el informe mensual del usuario autenticado.
     @GetMapping("/monthly")
+    @Operation(
+            summary = "Consultar mi informe mensual",
+            description = "Calcula los ingresos, gastos y balance del mes, junto con los gastos agrupados por categoría. Utiliza las fechas de los movimientos y solo incluye datos del usuario autenticado."
+    )
     public MonthlyReportResponse getMonthlyReport(
             @AuthenticationPrincipal Jwt jwt,
 
