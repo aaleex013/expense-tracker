@@ -1,6 +1,8 @@
 package com.alejandro.expense_tracker.recurring;
 
+import jakarta.persistence.LockModeType;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Lock;
 
 import java.util.List;
 import java.util.Optional;
@@ -19,6 +21,12 @@ public interface RecurringExpenseRepository extends JpaRepository<RecurringExpen
 
     // / Devuelve los gastos recurrentes activos del usuario, ordenados por nombre e ID
     List<RecurringExpense> findAllByUser_IdAndActiveTrueOrderByNameAscIdAsc(
+            Long userId
+    );
+    // Bloqueamos las configuraciones mientras generamos sus vencimientos.
+    // Las procesamos por ID para mantener un orden consistente.
+    @Lock(LockModeType.PESSIMISTIC_WRITE)
+    List<RecurringExpense> findAllByUser_IdAndActiveTrueOrderByIdAsc(
             Long userId
     );
 }

@@ -156,6 +156,28 @@ public class GlobalExceptionHandler {
         );
     }
 
+    // También devolvemos 404 cuando el vencimiento pertenece a otra persona.
+    @ExceptionHandler(ExpenseOccurrenceNotFoundException.class)
+    public ProblemDetail handleExpenseOccurrenceNotFound(
+            ExpenseOccurrenceNotFoundException exception
+    ) {
+        return ProblemDetail.forStatusAndDetail(
+                HttpStatus.NOT_FOUND,
+                exception.getMessage()
+        );
+    }
+
+    // Impedimos confirmar un pago que ya se había registrado.
+    @ExceptionHandler(ExpenseOccurrenceAlreadyPaidException.class)
+    public ProblemDetail handleExpenseOccurrenceAlreadyPaid(
+            ExpenseOccurrenceAlreadyPaidException exception
+    ) {
+        return ProblemDetail.forStatusAndDetail(
+                HttpStatus.CONFLICT,
+                exception.getMessage()
+        );
+    }
+
     //-----Todas las excepciones-----
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
