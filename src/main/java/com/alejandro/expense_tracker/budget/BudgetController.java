@@ -3,6 +3,7 @@ package com.alejandro.expense_tracker.budget;
 import com.alejandro.expense_tracker.budget.dto.BudgetLimitRequest;
 import com.alejandro.expense_tracker.budget.dto.BudgetRequest;
 import com.alejandro.expense_tracker.budget.dto.BudgetResponse;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.validation.Valid;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
@@ -16,6 +17,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/budgets")
+@SecurityRequirement(name = "bearerAuth")
 public class BudgetController {
     private final BudgetService budgetService;
 

@@ -3,6 +3,7 @@ package com.alejandro.expense_tracker.movement;
 import com.alejandro.expense_tracker.movement.dto.MovementPageResponse;
 import com.alejandro.expense_tracker.movement.dto.MovementRequest;
 import com.alejandro.expense_tracker.movement.dto.MovementResponse;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.validation.Valid;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -18,6 +19,7 @@ import java.time.LocalDate;
 
 @RestController
 @RequestMapping("api/movements")
+@SecurityRequirement(name = "bearerAuth")
 public class MovementController {
     private final MovementService movementService;
 

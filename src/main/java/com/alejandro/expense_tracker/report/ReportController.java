@@ -1,6 +1,7 @@
 package com.alejandro.expense_tracker.report;
 
 import com.alejandro.expense_tracker.report.dto.MonthlyReportResponse;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -12,6 +13,7 @@ import java.time.YearMonth;
 
 @RestController
 @RequestMapping("/api/reports")
+@SecurityRequirement(name = "bearerAuth")
 public class ReportController {
 
     private final ReportService reportService;

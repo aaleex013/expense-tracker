@@ -3,6 +3,7 @@ package com.alejandro.expense_tracker.recurring;
 import com.alejandro.expense_tracker.recurring.dto.RecurringExpenseActiveRequest;
 import com.alejandro.expense_tracker.recurring.dto.RecurringExpenseRequest;
 import com.alejandro.expense_tracker.recurring.dto.RecurringExpenseResponse;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -15,6 +16,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("api/recurring-expenses")
+@SecurityRequirement(name = "bearerAuth")
 public class RecurringExpenseController {
     @Autowired
     private RecurringExpenseService recurringExpenseService;

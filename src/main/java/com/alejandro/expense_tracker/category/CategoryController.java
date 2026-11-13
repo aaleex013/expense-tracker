@@ -3,6 +3,7 @@ package com.alejandro.expense_tracker.category;
 
 import com.alejandro.expense_tracker.category.dto.CategoryRequest;
 import com.alejandro.expense_tracker.category.dto.CategoryResponse;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -15,6 +16,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/categories")
+@SecurityRequirement(name = "bearerAuth")
 public class CategoryController {
     private final  CategoryService categoryService;
 

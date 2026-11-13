@@ -3,6 +3,7 @@ package com.alejandro.expense_tracker.recurring.occurrence;
 import com.alejandro.expense_tracker.recurring.occurrence.dto.ConfirmExpensePaymentRequest;
 import com.alejandro.expense_tracker.recurring.occurrence.dto.ExpenseOccurrenceResponse;
 import com.alejandro.expense_tracker.recurring.occurrence.dto.GenerateOccurrencesRequest;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.validation.Valid;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
@@ -16,6 +17,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/expense-occurrences")
+@SecurityRequirement(name = "bearerAuth")
 public class ExpenseOccurrenceController {
 
     private final ExpenseOccurrenceService occurrenceService;
