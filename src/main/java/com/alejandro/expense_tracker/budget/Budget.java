@@ -91,4 +91,8 @@ public class Budget {
     public Instant getCreatedAt() {
         return createdAt;
     }
+    // Cambia el límite del presupuesto.
+    public void updateLimitAmount(BigDecimal limitAmount) {
+        this.limitAmount = limitAmount;
+    }
 }

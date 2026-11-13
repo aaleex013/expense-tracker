@@ -112,6 +112,16 @@ public class GlobalExceptionHandler {
                 exception.getMessage()
         );
     }
+    // Devolvemos 404 si el presupuesto no está disponible para el usuario
+    @ExceptionHandler(BudgetNotFoundException.class)
+    public ProblemDetail handleBudgetNotFound(
+            BudgetNotFoundException exception
+    ) {
+        return ProblemDetail.forStatusAndDetail(
+                HttpStatus.NOT_FOUND,
+                exception.getMessage()
+        );
+    }
 
     //-----Todas las excepciones-----
 

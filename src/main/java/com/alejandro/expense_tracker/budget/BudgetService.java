@@ -1,11 +1,13 @@
 package com.alejandro.expense_tracker.budget;
 
+import com.alejandro.expense_tracker.budget.dto.BudgetLimitRequest;
 import com.alejandro.expense_tracker.budget.dto.BudgetRequest;
 import com.alejandro.expense_tracker.budget.dto.BudgetResponse;
 import com.alejandro.expense_tracker.category.Category;
 import com.alejandro.expense_tracker.category.CategoryRepository;
 import com.alejandro.expense_tracker.category.CategoryType;
 import com.alejandro.expense_tracker.exceptions.BudgetAlreadyExistsException;
+import com.alejandro.expense_tracker.exceptions.BudgetNotFoundException;
 import com.alejandro.expense_tracker.exceptions.CategoryNotFoundException;
 import com.alejandro.expense_tracker.exceptions.InvalidBudgetCategoryException;
 import com.alejandro.expense_tracker.movement.MovementRepository;
@@ -87,6 +89,34 @@ public class BudgetService {
                 .stream()
                 .map(this::toResponse)
                 .toList();
+    }
+
+    @Transactional
+    public BudgetResponse updateLimit(
+            Long userId,
+            Long budgetId,
+            BudgetLimitRequest request
+    ) {
+        // Buscamos el presupuesto comprobando también su propietario.
+        Budget budget = budgetRepository
+                .findByIdAndUser_Id(budgetId, userId)
+                .orElseThrow(BudgetNotFoundException::new);
+
+        budget.updateLimitAmount(request.limitAmount());
+
+        // Hibérnate guardará el cambio al confirmar la transacción.
+        // La respuesta vuelve a calcular lo gastado y lo disponible.
+        return toResponse(budget);
+    }
+
+    @Transactional
+    public void delete(Long userId, Long budgetId) {
+        // Un usuario solo puede eliminar sus propios presupuestos.
+        Budget budget = budgetRepository
+                .findByIdAndUser_Id(budgetId, userId)
+                .orElseThrow(BudgetNotFoundException::new);
+
+        budgetRepository.delete(budget);
     }
 
     private BudgetResponse toResponse(Budget budget) {

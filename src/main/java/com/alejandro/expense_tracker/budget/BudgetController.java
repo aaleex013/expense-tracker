@@ -1,5 +1,6 @@
 package com.alejandro.expense_tracker.budget;
 
+import com.alejandro.expense_tracker.budget.dto.BudgetLimitRequest;
 import com.alejandro.expense_tracker.budget.dto.BudgetRequest;
 import com.alejandro.expense_tracker.budget.dto.BudgetResponse;
 import jakarta.validation.Valid;
@@ -49,6 +50,25 @@ public class BudgetController {
         Long userId = getUserId(jwt);
 
         return budgetService.findAll(userId, month);
+    }
+
+    // Modifica únicamente el límite del presupuesto indicado.
+    @PatchMapping("/{id}")
+    public BudgetResponse updateLimit(@AuthenticationPrincipal Jwt jwt, @PathVariable("id") Long budgetId,
+                                      @Valid @RequestBody BudgetLimitRequest request
+    ) {
+        Long userId = getUserId(jwt);
+
+        return budgetService.updateLimit(userId, budgetId, request);
+    }
+
+    // Elimina el presupuesto y devuelve una respuesta sin cuerpo.
+    @DeleteMapping("/{id}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void delete(@AuthenticationPrincipal Jwt jwt, @PathVariable("id") Long budgetId) {
+        Long userId = getUserId(jwt);
+
+        budgetService.delete(userId, budgetId);
     }
 
     // Extrae el identificador del usuario del JWT ya validado por Spring Security.
