@@ -123,6 +123,39 @@ public class GlobalExceptionHandler {
         );
     }
 
+    // Un gasto recurrente ajeno tampoco estará disponible para el usuario.
+    @ExceptionHandler(RecurringExpenseNotFoundException.class)
+    public ProblemDetail handleRecurringExpenseNotFound(
+            RecurringExpenseNotFoundException exception
+    ) {
+        return ProblemDetail.forStatusAndDetail(
+                HttpStatus.NOT_FOUND,
+                exception.getMessage()
+        );
+    }
+
+    // Rechazamos categorías de ingreso, como Nómina.
+    @ExceptionHandler(InvalidRecurringExpenseCategoryException.class)
+    public ProblemDetail handleInvalidRecurringExpenseCategory(
+            InvalidRecurringExpenseCategoryException exception
+    ) {
+        return ProblemDetail.forStatusAndDetail(
+                HttpStatus.BAD_REQUEST,
+                exception.getMessage()
+        );
+    }
+
+    // Devuelve un error cuando frecuencia y mes no forman una configuración válida.
+    @ExceptionHandler(InvalidRecurringExpenseScheduleException.class)
+    public ProblemDetail handleInvalidRecurringExpenseSchedule(
+            InvalidRecurringExpenseScheduleException exception
+    ) {
+        return ProblemDetail.forStatusAndDetail(
+                HttpStatus.BAD_REQUEST,
+                exception.getMessage()
+        );
+    }
+
     //-----Todas las excepciones-----
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
