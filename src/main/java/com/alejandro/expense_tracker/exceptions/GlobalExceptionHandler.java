@@ -93,6 +93,25 @@ public class GlobalExceptionHandler {
                 exception.getMessage()
         );
     }
+    @ExceptionHandler(BudgetAlreadyExistsException.class)
+    public ProblemDetail handleBudgetAlreadyExists(
+            BudgetAlreadyExistsException exception
+    ) {
+        return ProblemDetail.forStatusAndDetail(
+                HttpStatus.CONFLICT,
+                exception.getMessage()
+        );
+    }
+
+    @ExceptionHandler(InvalidBudgetCategoryException.class)
+    public ProblemDetail handleInvalidBudgetCategory(
+            InvalidBudgetCategoryException exception
+    ) {
+        return ProblemDetail.forStatusAndDetail(
+                HttpStatus.BAD_REQUEST,
+                exception.getMessage()
+        );
+    }
 
     //-----Todas las excepciones-----
 
